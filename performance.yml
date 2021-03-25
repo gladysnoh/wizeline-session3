@@ -1,0 +1,44 @@
+config:
+  target: "https://api.todoist.com"
+  phases:
+    - duration: 3
+      arrivalRate: 1
+      name: "Phase 1"    
+  defaults:
+   headers:
+      Authorization: Bearer {{ $processEnvironment.TOKEN }}
+      Content-type: application/json
+  processor: "./faker/functions.js"
+# For more information: https://artillery.io/docs/script-reference/
+scenarios:
+  - flow:
+      - function: "generateRandomData"
+      - get:
+          url: "/rest/v1/tasks"
+      - post:
+          url: "/rest/v1/tasks"
+          json:
+           content: "{{ contentNew }}"
+           priority: 4
+          capture:
+           json: "$.id"
+           as: "id"
+      - log: "Current id is {{ id }}"
+      - get:
+          url: "/rest/v1/tasks/{{ id }}"
+      - post:
+          url: "/rest/v1/tasks/{{ id }}"
+          json:
+           content: "{{ contentUpdated }}"
+           priority: 4
+      - post:
+          url: "/rest/v1/tasks/{{ id }}/close"
+          json:
+           id: "{{id}}"
+      - post:
+          url: "/rest/v1/tasks/{{ id }}/reopen"
+          json:
+           id: "{{id}}"
+      - delete:
+          url: "/rest/v1/tasks/{{ id }}"           
+# For more information: https://artillery.io/docs/script-reference/

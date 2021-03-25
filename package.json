@@ -1,0 +1,15 @@
+{
+  "name": "session3",
+  "version": "1.0.0",
+  "description": "Session 3 performance testing artillery",
+  "main": "index.js",
+  "scripts": {
+    "test": "artillery run --output results/report.json performance.yml && artillery report --output results/report.html results/report.json"
+  },
+  "author": "Gladys Noh",
+  "license": "MIT",
+  "dependencies": {
+    "artillery": "^1.6.2",
+    "faker": "^5.4.0"
+  }
+}
